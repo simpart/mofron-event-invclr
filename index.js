@@ -22,49 +22,31 @@ mf.event.Invclr = class extends mf.Event {
         }
     }
     
-    /**
-     * set invert listener
-     *
-     * @note private method
-     */
-    component (prm) {
+    contents (tgt) {
         try {
-            let ret = super.component(prm);
-            if (undefined === ret) {
-                let style = prm.styleTgt();
-                let fnc   = (p1, p2, p3) => {
-                    try {
-                        let clr = mf.func.getColor(p1[p3.targetColor()]);
-                        if (null === clr) {
-                            return;
-                        }
-                        let rgb = clr.rgb();
-                        if (p3.value() > (rgb[0]+ rgb[1] + rgb[2])) {
-                            if (true !== p3.invStatus()) {
-                                p3.execHandler(true);
-                                p3.invStatus(true);
-                            }
-                        } else {
-                            if (false !== p3.invStatus()) {
-                                p3.execHandler(false);
-                                p3.invStatus(false);
-                            }
-                        }
-                    } catch (e) {
-                        console.error(e.stack);
-                        throw e;
+            let sty_env = (p1, p2, p3) => {
+                try {
+                    let clr = mf.func.getColor(p1[p3.targetColor()]);
+                    if (null === clr) {
+                        return;
                     }
+                    let rgb = clr.rgb();
+                    p3.execHandler((p3.value() > (rgb[0]+ rgb[1] + rgb[2])) ? true : false);
+                    
+                } catch (e) {
+                    console.error(e.stack);
+                    throw e;
                 }
-                style.styleListener(this.targetColor(), fnc, this);
-            }
-            return ret;
+            };
+            this.component().styleTgt().styleListener(this.targetColor(), fnc, this);
+            let tgt_sty = {};
+            tgt_sty[this.targetColor()] = this.style(this.targetColor());
+            sty_env(tgt_sty, null, this);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
-    
-    contents () {}
     
     /**
      * setter/getter target color
@@ -93,32 +75,6 @@ mf.event.Invclr = class extends mf.Event {
      */
     value (prm) {
         try { return this.member('value', 'number', prm, 390); } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
-     * setter/getter invert status
-     * 
-     * @param prm (true) inverted color
-     * @param prm (false) not inverted color
-     * @param prm (undefined) call as getter
-     * @return (boolean) invert status
-     */
-    invStatus (prm) {
-        try { return this.member('invStatus', 'boolean', prm, false); } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
-     * kick effect
-     * @note private method
-     */
-    execEffect (eff, prm) {
-        try { eff.execute(prm[0]); } catch (e) {
             console.error(e.stack);
             throw e;
         }

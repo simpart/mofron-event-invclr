@@ -1,6 +1,6 @@
 {
   "name": "mofron-event-invclr",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "invert color event for mofron component",
   "main": "index.js",
   "scripts": {
